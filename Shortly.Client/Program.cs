@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Shortly.Client.Data;
 using Shortly.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,5 +38,8 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+//Seed the database
+DbInitializer.SeedDefaultData(app);
 
 app.Run();
