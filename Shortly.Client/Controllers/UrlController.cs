@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Shortly.Client.Data.ViewModels;
 using Shortly.Data;
 
@@ -14,9 +15,10 @@ namespace Shortly.Client.Controllers
         }
         public IActionResult Index()
         {
-              
+
             var allUrls = _context
                 .Urls
+                .Include(n => n.User)
                 .Select(url => new GetUrlVM()
                 {
                     Id = url.Id, 
@@ -24,6 +26,12 @@ namespace Shortly.Client.Controllers
                     ShortLink = url.ShortLink,
                     NrOfClicks = url.NrOfClicks,
                     UserId = url.UserId,
+
+                    User = url.User != null ? new GetUserVM()
+                    {
+                        Id = url.User.Id,
+                        FullName = url.User.FullName
+                    } : null
                 })
                 .ToList();
 
