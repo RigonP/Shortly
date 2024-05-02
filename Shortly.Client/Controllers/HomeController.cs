@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Shortly.Client.Models;
+using Shortly.Client.Data.ViewModels;
 using System.Diagnostics;
 
 namespace Shortly.Client.Controllers
@@ -15,18 +15,21 @@ namespace Shortly.Client.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var newUrl = new PostUrlVM();
+            return View(newUrl);
         }
 
-        public IActionResult Privacy()
+        public IActionResult ShortenUrl(PostUrlVM postUrlVM)
         {
-            return View();
+            //Validate the Model
+            if(!ModelState.IsValid)
+            {
+                return View("Index", postUrlVM);
+            }
+
+
+            return RedirectToAction("Index");
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }
