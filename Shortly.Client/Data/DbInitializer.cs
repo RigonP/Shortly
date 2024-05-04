@@ -13,7 +13,7 @@ namespace Shortly.Client.Data
 
 				if(!dbContext.Users.Any())
 				{
-					dbContext.Users.Add(new User()
+					dbContext.Users.Add(new AppUser()
 					{
 						FullName = "Rigon Pira",
 						Email = "rigonpira@gmail.com"
