@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Shortly.Client.Helpers.Roles;
 using Shortly.Data;
 using Shortly.Data.Models;
 
@@ -16,7 +17,7 @@ namespace Shortly.Client.Data
 				var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
 
 				//Simple user related data
-				var simpleUserRole = "User";
+				var simpleUserRole = Role.User;
 				var simpleUserEmail = "user@shrtly.com";
 
 				if(!await roleManager.RoleExistsAsync(simpleUserRole))
@@ -38,7 +39,7 @@ namespace Shortly.Client.Data
 				}
 
 				//Admin user related data
-				var adminUserRole = "Admin";
+				var adminUserRole = Role.Admin;
 				var adminUserEmail = "admin@shrtly.com";
 
 				if (!await roleManager.RoleExistsAsync(adminUserRole))
