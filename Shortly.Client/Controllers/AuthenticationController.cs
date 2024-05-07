@@ -55,6 +55,10 @@ namespace Shortly.Client.Controllers
 					{
 						return RedirectToAction("Index", "Home");
 					}
+					else if(userLoggedIn.IsNotAllowed)
+					{
+						return RedirectToAction("EmailConfirmation");
+					}
 					else
 					{
 						ModelState.AddModelError("", "Invalid login attempt. Please, check your username and password");
@@ -131,5 +135,11 @@ namespace Shortly.Client.Controllers
 			await _signInManager.SignOutAsync();
 			return RedirectToAction("Index", "Home");
 		}
+
+		public async Task<IActionResult> EmailConfirmation()
+		{
+            var confirmEmail = new ConfirmEmailLoginVM();
+			return View(confirmEmail);
+        }
 	}
 }
