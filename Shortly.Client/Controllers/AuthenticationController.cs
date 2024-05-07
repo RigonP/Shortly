@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using Shortly.Client.Data.ViewModels;
@@ -58,10 +59,12 @@ namespace Shortly.Client.Controllers
                     if (userLoggedIn.Succeeded)
                     {
                         return RedirectToAction("Index", "Home");
-                    }
-                    else if (userLoggedIn.IsNotAllowed)
+                    }else if (userLoggedIn.IsNotAllowed)
                     {
                         return RedirectToAction("EmailConfirmation");
+                    }else if (userLoggedIn.RequiresTwoFactor)
+                    {
+                        return RedirectToAction("TwoFactorConfirmation", new { loggedInUserId = user.Id});
                     }
 
                     else
@@ -197,6 +200,27 @@ namespace Shortly.Client.Controllers
             var result = await _userManager.ConfirmEmailAsync(user, userConfirmationToken);
 
             TempData["EmailConfirmationVerified"] = "Thank you! Your account has been confirmed. You can now log in !";
+            return RedirectToAction("Index", "Home");
+        }
+        
+        public async Task<IActionResult> TwoFactorConfirmation(string loggedInUserId)
+        {
+
+            //1. Get the user
+            var user = await _userManager.FindByIdAsync(loggedInUserId);
+            if(user != null)
+            {
+                var userToken = await _userManager.GenerateTwoFactorTokenAsync(user, "Phone");
+
+                //2. Send the SMS (set up twilio)
+                var confirm2FALoginVM = new Confirm2FALoginVM()
+                {
+                    UserId = loggedInUserId
+                };
+
+                return View(confirm2FALoginVM);
+            }
+
             return RedirectToAction("Index", "Home");
         }
     }
