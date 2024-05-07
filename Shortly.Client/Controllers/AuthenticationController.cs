@@ -191,7 +191,7 @@ namespace Shortly.Client.Controllers
 
             if (user == null)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home"); 
             }
 
             var result = await _userManager.ConfirmEmailAsync(user, userConfirmationToken);
