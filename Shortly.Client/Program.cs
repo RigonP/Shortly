@@ -55,6 +55,13 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddAuthentication()
+    .AddGoogle(options =>
+    {
+        options.ClientId = "abcd";
+        options.ClientSecret = "abcd";
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
